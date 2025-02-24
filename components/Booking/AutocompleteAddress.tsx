@@ -36,12 +36,12 @@ function AutocompleteAddress() {
     }
 
     return (
-        <div className='mt-5'>
-            <div className='relative'>
+        <div className='mt-5 '>
+            <div className='relative' >
                 <label className='text-black-300 text-[20px]'>From</label>
                 <input type="text"
                     className='hover:bg-gray-200 bg-white p-1 border-[px] w-full rounded-md outline-none
-                    focus:outline-yellow-500'
+                    focus:outline-gray-500'
                     value={source}
                     onChange={(e) => setSource(e.target.value)}
                 />
@@ -58,7 +58,7 @@ function AutocompleteAddress() {
             <div className='relative mb-20'>
                 <label className='text-black-300 text-[20px]'>To</label>
                 <input type="text"
-                    className='hover:bg-gray-200 bg-white p-1 border-[px] w-full rounded-md outline-none focus:outline-yellow-500'
+                    className='hover:bg-gray-200 bg-white p-1 border-[px] w-full rounded-md outline-none focus:outline-gray-500'
                     value={destination}
                     onChange={(e) => setDestination(e.target.value)}
                 />
