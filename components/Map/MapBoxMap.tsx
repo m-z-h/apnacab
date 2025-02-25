@@ -6,6 +6,13 @@ import { UserLocationContext } from '@/context/UserLocationContext';
 import Markers from './Markers';
 import { DestinationCordiContext } from '@/context/DestinationCordiContext';
 import { SourceCordiContext } from '@/context/SourceCordiContext';
+import { DirectionDataContext } from '@/context/DirectionDataContext';
+import MapBoxRoute from './MapBoxRoute';
+
+
+
+const MAPBOX_DRIVING_ENDPOINT = 'https://api.mapbox.com/directions/v5/mapbox/driving/';
+const session_token="5ccc4a4-ab0a-4a7c-943d-580e55542363";
 
 function MapBoxMap() {
 
@@ -14,6 +21,8 @@ function MapBoxMap() {
   const {userLocation, setUserLocation} = useContext(UserLocationContext);
   const {sourceCoordinates, setSourceCoordinates} = useContext(SourceCordiContext);
   const {destinationCoordinates, setDestinationCoordinates} = useContext(DestinationCordiContext);
+  const {directionData, setDirectionData} = useContext(DirectionDataContext);
+
 //use to fly to the source coordinates
   useEffect(()=>{
     if(sourceCoordinates){
@@ -23,6 +32,7 @@ function MapBoxMap() {
       })
     }
   },[sourceCoordinates])
+
 //use to fly to the destination coordinates
   useEffect(()=>{
     if(destinationCoordinates){
@@ -31,7 +41,31 @@ function MapBoxMap() {
         duration:2500
       })
     }
+    if(sourceCoordinates && destinationCoordinates){
+      getDirectionRoute();
+    }
   },[destinationCoordinates])
+
+
+  const getDirectionRoute = async ()=>{
+    const res=await fetch(MAPBOX_DRIVING_ENDPOINT+
+      sourceCoordinates.lng+","+
+      sourceCoordinates.lat+";"+
+      destinationCoordinates.lng+","+
+      destinationCoordinates.lat+
+      "?overview=full&geometries=geojson"+
+      "&access_token="+
+      process.env.NEXT_PUBLIC_MAP_ACCESS_TOKEN,
+      {
+        headers:{
+          "Content-Type":"application/json"
+        }
+      }
+    );
+    const result = await res.json();
+    console.log(result);
+    setDirectionData(result);
+  }
   
   return (
     <div className='p-5'>
@@ -48,6 +82,10 @@ function MapBoxMap() {
         style={{width: '100%' , height: 700, borderRadius:10}}
         mapStyle="mapbox://styles/mapbox/streets-v9">
         <Markers/>
+        {directionData?.routes?(
+            <MapBoxRoute
+            coordinates={directionData?.routes[0]?.geometry?.coordinates}/>
+          ):null}
       </Map>:null}
       </div>
     </div>

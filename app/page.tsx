@@ -8,12 +8,14 @@ import { useEffect, useState } from "react";
 import { UserLocationContext } from "@/context/UserLocationContext";
 import { SourceCordiContext } from "@/context/SourceCordiContext";
 import { DestinationCordiContext } from "@/context/DestinationCordiContext";
+import { DirectionDataContext } from "@/context/DirectionDataContext";
 
 
 export default function Home() {
+  const [directionData, setDirectionData] = useState<any>([]);
+  const [sourceCoordinates, setSourceCoordinates] = useState<any>([]);
+  const [destinationCoordinates, setDestinationCoordinates] = useState<any>([]);
   const [userLocation, setUserLocation] = useState<any>();
-  const [sourceCoordinates, setSourceCoordinates] = useState<any>([])
-  const [destinationCoordinates, setDestinationCoordinates] = useState<any>([])
 
     useEffect(() => {
       getuserLocation();
@@ -29,10 +31,11 @@ export default function Home() {
   }
 
   return (
-    <div className="">
+    <div>
       <UserLocationContext.Provider value={{userLocation, setUserLocation}}>
       <SourceCordiContext.Provider value={{sourceCoordinates, setSourceCoordinates}}>
-      <DestinationCordiContext.Provider value={{destinationCoordinates, setDestinationCoordinates}}>   
+      <DestinationCordiContext.Provider value={{destinationCoordinates, setDestinationCoordinates}}>
+      <DirectionDataContext.Provider value={{directionData, setDirectionData}}>
         <div className='grid grid-cols-1 md:grid-cols-3'>
           <div className="bg-green-50 ">
             <Booking />
@@ -41,6 +44,7 @@ export default function Home() {
             <MapBoxMap/>
           </div>
         </div>
+        </DirectionDataContext.Provider>
         </DestinationCordiContext.Provider>
       </SourceCordiContext.Provider>
       </UserLocationContext.Provider>
