@@ -1,11 +1,24 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import { DestinationCordiContext } from '@/context/DestinationCordiContext'
+import { SourceCordiContext } from '@/context/SourceCordiContext'
+import React, { useContext, useEffect, useState } from 'react'
 
 function AutocompleteAddress() {
+
+    const session_token = '5ccc4a4-ab0a-4a7c-943d-580e55542363'
+    const MAPBOX_RETRIVE_URL = 'https://api.mapbox.com/search/searchbox/v1/retrieve/'
+
     const [source, setSource] = useState<any>('')
+    const [sourceChange, setSourceChange] = useState<any>(false)
+    const [destinationChange, setDestinationChange] = useState<any>(false)
+
+    const {sourceCoordinates, setSourceCoordinates} = useContext(SourceCordiContext);
+    const {destinationCoordinates, setDestinationCoordinates} = useContext(DestinationCordiContext);
+
     const [addressList, setAddressList] = useState<any>([])
-    const [destination, setDestination] = useState<any>('') 
+    const [destination, setDestination] = useState<any>('')
     const [destinationList, setDestinationList] = useState<any>([])
+ 
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
@@ -35,6 +48,31 @@ function AutocompleteAddress() {
         setList(result)
     }
 
+    const onSourceAddressClick = async (item:any) =>{
+        setSource(item.full_address); 
+        setAddressList([]); setSourceChange(false)
+        const res=await fetch( MAPBOX_RETRIVE_URL+item.mapbox_id+"?session_token="+session_token+"&access_token="+process.env.NEXT_PUBLIC_MAP_ACCESS_TOKEN
+        )
+        const result = await res.json()
+        setSourceCoordinates({
+            lat: result.features[0].geometry.coordinates[1],
+            lng: result.features[0].geometry.coordinates[0]
+        })
+        console.log(result)
+    }
+    const onDestinationAddressClick = async (item:any) =>{
+        setDestination(item.full_address); 
+        setDestinationList([]); setDestinationChange(false)
+        const res=await fetch( MAPBOX_RETRIVE_URL+item.mapbox_id+"?session_token="+session_token+"&access_token="+process.env.NEXT_PUBLIC_MAP_ACCESS_TOKEN
+        )
+        const result = await res.json()
+        setDestinationCoordinates({
+            lat: result.features[0].geometry.coordinates[1],
+            lng: result.features[0].geometry.coordinates[0]
+        })
+        console.log(result)
+    }
+
     return (
         <div className='mt-5 border-cyan-500'>
             <div className='relative' >
@@ -49,11 +87,11 @@ function AutocompleteAddress() {
                     <div className='shadow-md p-2 absolute rounded-md bg-white mt-2'>
                         {addressList.suggestions.map((item: any, index: number) => (
                             <h2 key={`${source}-${item.id || index}`} className='hover:bg-blue-200 cursor-pointer'
-                                onClick={() => { setSource(item.full_address); setAddressList([]) }}
+                                onClick={() => { onSourceAddressClick(item) }}
                             >{item.full_address}</h2>
                         ))}
                     </div>
-                ) : null}
+                ):null}
             </div>
             <div className='relative mb-20'>
                 <label className='text-black-300 text-[20px]'>To</label>
@@ -66,14 +104,15 @@ function AutocompleteAddress() {
                     <div className='shadow-md p-2 absolute rounded-md bg-white mt-2'>
                         {destinationList.suggestions.map((item: any, index: number) => (
                             <h2 key={`${destination}-${item.id || index}`} className='hover:bg-blue-200 cursor-pointer'
-                                onClick={() => { setDestination(item.full_address); setDestinationList([]) }}
+                                onClick={() => { onDestinationAddressClick(item) }}
                             >{item.full_address}</h2>
                         ))}
                     </div>
-                ) : null}
+                ):null}
             </div>
         </div>
     )
 }
 
 export default AutocompleteAddress
+
