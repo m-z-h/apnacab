@@ -8,6 +8,7 @@ import { DestinationCordiContext } from '@/context/DestinationCordiContext';
 import { SourceCordiContext } from '@/context/SourceCordiContext';
 import { DirectionDataContext } from '@/context/DirectionDataContext';
 import MapBoxRoute from './MapBoxRoute';
+import DistanceTime from './DistanceTime';
 
 
 
@@ -88,6 +89,10 @@ function MapBoxMap() {
           ):null}
       </Map>:null}
       </div>
+          <div className='p-2 rounded-xl bg-yellow-200 absolute bottom-[40px]
+          z-20 right-[20px] hidden md:block'>
+            <DistanceTime/>
+          </div>
     </div>
   )
 }
