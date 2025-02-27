@@ -8,7 +8,9 @@ import { SelectedCarAmountContext } from '@/context/SelectedCarAmount';
 function Booking() {
     const screenHight=window.innerHeight*0.72;
     const {carAmount, setCarAmount}=useContext(SelectedCarAmountContext)
+
     const router:any= useRouter();
+    
     return (
         <div className=' p-5 h-[90vh]'>
             <h2 className='mb-20  text-[25px] font-semibold'>Booking</h2>

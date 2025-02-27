@@ -7,9 +7,12 @@ import { DirectionDataContext } from '@/context/DirectionDataContext'
 import { SelectedCarAmountContext } from '@/context/SelectedCarAmount'
 
 function Cars() {
-    const [selectedCar, setSelectedCar] =useState<any>()
-    const {directionData, setDirectionData} = useContext(DirectionDataContext);
-    const {carAmount, setCarAmount} = useContext(SelectedCarAmountContext)
+    const [selectedCar, setSelectedCar] = useState<any>()
+    const directionDataContext = useContext(DirectionDataContext);
+    const selectedCarAmountContext = useContext(SelectedCarAmountContext);
+
+    const { directionData, setDirectionData } = directionDataContext || { directionData: {}, setDirectionData: () => {} };
+    const { carAmount, setCarAmount } = selectedCarAmountContext || { carAmount: null, setCarAmount: () => {} };
 
     const getCost = (charges: any) => {
         return (charges * directionData.routes[0].distance * 0.001).toFixed(2);
@@ -25,9 +28,10 @@ function Cars() {
             gap-2 m-1 p-2 '>
                 {CarsList.map((item, index) => item && (
                     <div key={index} className={`m-2 p-2 border-[3px] rounded-md border-emerald-50
-                    hover:border-yellow-300 cursor-pointer ${index === selectedCar ? 'border-yellow-300' :null}`}     
-                    onClick={() => {setSelectedCar(index);
-                    setCarAmount(getCost(item.charges))
+                    hover:border-yellow-300 cursor-pointer ${index === selectedCar ? 'border-yellow-300' : null}`}     
+                    onClick={() => {
+                        setSelectedCar(index);
+                        setCarAmount(getCost(item.charges))
                     }}>
                         <Image src={item.image}
                         alt={item.name}
