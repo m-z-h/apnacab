@@ -19,7 +19,8 @@
     "nodemon": "^3.1.9",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-map-gl": "^8.0.1"
+    "react-map-gl": "^8.0.1",
+    "stripe": "^17.7.0"
   },
   "devDependencies": {
     "@types/node": "^20",
