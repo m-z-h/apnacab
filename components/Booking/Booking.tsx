@@ -6,9 +6,7 @@ import { useRouter } from 'next/navigation';
 import { SelectedCarAmountContext } from '@/context/SelectedCarAmount';
 
 function Booking() {
-    const screenHight=window.innerHeight*0.72;
     const {carAmount, setCarAmount}=useContext(SelectedCarAmountContext)
-
     const router:any= useRouter();
     
     return (
